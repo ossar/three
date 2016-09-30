@@ -15,11 +15,14 @@ var scene = new THREE.Scene();
 //var camera = new THREE.PerspectiveCamera( 65, window.innerWidth / window.innerHeight, 0.1, 1000 );
 //camera.position.z = 15;
 //camera.position.y = -5;
-var camera = new THREE.OrthographicCamera( -80, 80, 80, -80, 0.001, 1000 );
+var kAsp = 1/10;
+var sWidth = kAsp * window.innerWidth/2;
+var sHeight = kAsp * window.innerHeight/2;
+
+var camera = new THREE.OrthographicCamera( -sWidth, sWidth, sHeight, -sHeight, 0.001, 1000 );
 camera.position.z = 30;
 camera.position.y = -80;
 camera.lookAt( scene.position );
-
 
 var renderer = new THREE.WebGLRenderer();
 renderer.setSize( window.innerWidth, window.innerHeight );
@@ -32,6 +35,14 @@ var earth = new THREE.Mesh( geometry, material );
 earth.position.x = 60;
 earth.rotation.x = -Math.PI/2;
 earth.rotation.reorder('ZXY');
+
+//earth.rotation.x = Math.PI * 23.4/180;
+
+// 地球の自転
+//rotEarth = new THREE.Quaternion().setFromAxisAngle(  );
+
+//console.log(earth);
+
 scene.add( earth );
 
 // 月

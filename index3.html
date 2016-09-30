@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset=utf-8>
+    <title>My first Three.js app</title>
+    <style>
+    body { margin: 0; }
+    canvas { width: 100%; height: 100% }
+    </style>
+</head>
+<body>
+    <script src="js/three.js"></script>
+<script>
+
+// シーン
+var scene = new THREE.Scene();
+
+// カメラ
+var kCam      = 1/3;
+var camera = new THREE.OrthographicCamera(
+    -kCam * window.innerWidth/2, kCam * window.innerWidth/2,
+    kCam * window.innerHeight/2, -kCam * window.innerHeight/2,
+    0.001, 1000);
+camera.position.z = 160;
+camera.position.y = 45;
+camera.lookAt( scene.position );
+
+// レンダラ
+var renderer = new THREE.WebGLRenderer();
+renderer.setSize( window.innerWidth, window.innerHeight );
+document.body.appendChild( renderer.domElement );
+
+
+// 太陽
+var geometry = new THREE.SphereGeometry(20, 10, 10);
+var material = new THREE.MeshBasicMaterial({ color: 0xff8844, wireframe: true, });
+var sun = new THREE.Mesh( geometry, material );
+scene.add( sun );
+
+// 地球
+var earthPt = new THREE.Object3D();
+var earth = new THREE.Mesh(
+    new THREE.SphereGeometry(8, 8, 8),
+    new THREE.MeshBasicMaterial({ color: 0x3399ff, wireframe: true,})
+);
+earthPt.position.x = 150;
+scene.add( earthPt );
+earthPt.add( earth );
+
+var quaternion = new THREE.Quaternion();
+quaternion.setFromAxisAngle( new THREE.Vector3(0, 1, 0), Math.PI/180 * 0.5);
+
+// 月
+var moon = new THREE.Mesh(
+    new THREE.SphereGeometry(4, 6, 6),
+    new THREE.MeshBasicMaterial({ color: 0xffff77, wireframe: true,})
+);
+earthPt.add(moon);
+moon.position.x = 20;
+
+// 月の公転
+var moonQuaternion =new THREE.Quaternion();
+moonQuaternion.setFromAxisAngle( new THREE.Vector3(0, 1, 0), Math.PI/180 * 3.0);
+
+// レンダーループ
+function render() {
+    requestAnimationFrame( render );
+
+    sun.rotation.y = (sun.rotation.y + 0.003) % (Math.PI * 2);
+
+    earth.rotation.y = (earth.rotation.y + 0.1) % (Math.PI * 2);
+    earthPt.position.applyQuaternion(quaternion);
+
+    moon.rotation.y = (moon.rotation.y + Math.PI/180 * 1.5) % (Math.PI * 2);
+    moon.position.applyQuaternion(moonQuaternion);
+
+    renderer.render( scene, camera );
+}
+render();
+
+</script>
+</body>
+</html>
