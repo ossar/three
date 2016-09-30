@@ -58,6 +58,10 @@ camera.position.z = 2000;
 camera.position.y = 700;
 camera.lookAt(scene.position);
 
+//camera.zoom = 1;
+//camera.lookAt(new THREE.Vector3(1495,0,0));
+//camera.updateProjectionMatrix();
+
 // レンダラ
 var renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
@@ -89,6 +93,9 @@ rotates.push(venus);
 var earth = generatePlanet(pData['Earth'], 1);
 sun.axis.add(earth.axis);
 rotates.push(earth);
+
+console.log(earth.axis);
+earth.axis.rotation.z += Math.PI * 23.4 / 180;
 
 // 月
 var moon = generatePlanet(pData['Moon'], 1);
