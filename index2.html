@@ -13,7 +13,7 @@
 <script>
 
 // 時間係数（日）
-var kTime = 0.05;
+var kTime = 1;
 
 // 距離係数（km）
 var kDist = 1 / 1e+6;
@@ -21,7 +21,7 @@ var kDist = 1 / 1e+6;
 // サイズ
 //var kSize = 2 / 1e+6;
 var kSize = kDist;
-var kPlanet = 10;
+var kPlanet = 20;
 
 // データ
 var pData = {
@@ -52,10 +52,10 @@ console.log(window.innerHeight/2);
 var camera = new THREE.OrthographicCamera(
     -window.innerWidth/2, window.innerWidth/2,
     window.innerHeight/2, -window.innerHeight/2,
-    1, 10000
+    1, 100000
 );
-camera.position.z = 2000;
-camera.position.y = 700;
+camera.position.z = 20000;
+camera.position.y = 3000;
 camera.lookAt(scene.position);
 
 //camera.zoom = 1;
@@ -80,17 +80,17 @@ universe.add(sun.axis);
 rotates.push(sun);
 
 // 水星
-var mercury = generatePlanet(pData['Mercury'], 1);
-sun.axis.add(mercury.axis);
-rotates.push(mercury);
+var mercury = generatePlanet(pData['Mercury']);
+//sun.axis.add(mercury.axis);
+//rotates.push(mercury);
 
 // 金星
-var venus = generatePlanet(pData['Venus'], 1);
-sun.axis.add(venus.axis);
-rotates.push(venus);
+var venus = generatePlanet(pData['Venus']);
+//sun.axis.add(venus.axis);
+//rotates.push(venus);
 
 // 地球
-var earth = generatePlanet(pData['Earth'], 1);
+var earth = generatePlanet(pData['Earth']);
 sun.axis.add(earth.axis);
 rotates.push(earth);
 
@@ -98,19 +98,19 @@ console.log(earth.axis);
 earth.axis.rotation.z += Math.PI * 23.4 / 180;
 
 // 月
-var moon = generatePlanet(pData['Moon'], 1);
+var moon = generatePlanet(pData['Moon']);
 earth.axis.add(moon.axis);
 rotates.push(moon);
 
 // 火星
-var mars = generatePlanet(pData['Mars'], 1);
+var mars = generatePlanet(pData['Mars']);
 sun.axis.add(mars.axis);
 rotates.push(mars);
 
 // 木星
-var jupiter = generatePlanet(pData['Jupiter'], 1);
-sun.axis.add(jupiter.axis);
-rotates.push(jupiter);
+var jupiter = generatePlanet(pData['Jupiter']);
+//sun.axis.add(jupiter.axis);
+//rotates.push(jupiter);
 
 /**
  * 天体作成
@@ -130,9 +130,6 @@ function generatePlanet(params) {
 
     // 公転用四元数
     var quaternion = new THREE.Quaternion();
-    if (params[3]) {
-        quaternion.setFromAxisAngle(new THREE.Vector3(0, 1, 0), 2 * Math.PI / params[3] * kTime);
-    }
 
     return {
         // 座標軸
@@ -151,6 +148,9 @@ function generatePlanet(params) {
         },
         // 公転関数
         revolution : function() {
+            if (params[3]) {
+                quaternion.setFromAxisAngle(new THREE.Vector3(0, 1, 0), 2 * Math.PI / params[3] * kTime);
+            }
             this.axis.position.applyQuaternion(this.quaternion);
         },
     };
