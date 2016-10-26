@@ -12,6 +12,7 @@
 <script src="js/three.js"></script>
 <script src="js/libs/dat.gui.min.js"></script>
 <script src="js/libs/stats.min.js"></script>
+<script src="js/controls/FlyControls.js"></script>
 <script>
 
 /**
@@ -173,6 +174,8 @@ function generatePlanet(params) {
         },
     };
 }
+var controles = new THREE.FlyControls(camera);
+var clock = new THREE.Clock();
 
 // レンダーループ
 function render() {
@@ -187,7 +190,10 @@ function render() {
         rotates[i].revolution();
     }
 
+
     stats.end();
+
+    controles.update(clock.getDelta());
 
     renderer.render(scene, camera);
 }
