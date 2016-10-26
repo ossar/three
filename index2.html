@@ -10,10 +10,16 @@
 </head>
 <body>
 <script src="js/three.js"></script>
+<script src="js/libs/dat.gui.min.js"></script>
 <script>
 
-// 時間係数（日）
-var kTime = 1;
+/**
+ * パラメータ
+ */
+var uniParams = {
+    // 時間係数（日）
+    kTime : 0.5,
+}
 
 // 距離係数（km）
 var kDist = 1 / 1e+6;
@@ -22,6 +28,10 @@ var kDist = 1 / 1e+6;
 //var kSize = 2 / 1e+6;
 var kSize = kDist;
 var kPlanet = 20;
+
+// GUI dat
+var gui = new dat.GUI();
+gui.add(uniParams, 'kTime', 0, 1);
 
 // データ
 var pData = {
@@ -46,8 +56,8 @@ pData['Jupiter'][0] *= kPlanet;
 // シーン
 var scene = new THREE.Scene();
 
-console.log(window.innerWidth/2);
-console.log(window.innerHeight/2);
+//console.log(window.innerWidth/2);
+//console.log(window.innerHeight/2);
 // カメラ
 var camera = new THREE.OrthographicCamera(
     -window.innerWidth/2, window.innerWidth/2,
@@ -86,15 +96,15 @@ var mercury = generatePlanet(pData['Mercury']);
 
 // 金星
 var venus = generatePlanet(pData['Venus']);
-//sun.axis.add(venus.axis);
-//rotates.push(venus);
+sun.axis.add(venus.axis);
+rotates.push(venus);
 
 // 地球
 var earth = generatePlanet(pData['Earth']);
 sun.axis.add(earth.axis);
 rotates.push(earth);
 
-console.log(earth.axis);
+//console.log(earth.axis);
 earth.axis.rotation.z += Math.PI * 23.4 / 180;
 
 // 月
@@ -109,8 +119,8 @@ rotates.push(mars);
 
 // 木星
 var jupiter = generatePlanet(pData['Jupiter']);
-//sun.axis.add(jupiter.axis);
-//rotates.push(jupiter);
+sun.axis.add(jupiter.axis);
+rotates.push(jupiter);
 
 /**
  * 天体作成
@@ -143,13 +153,13 @@ function generatePlanet(params) {
         // 自転関数
         rotation : function() {
             if (this.data[2]) {
-                this.planet.rotation.y = (this.planet.rotation.y + kTime / this.data[2]) % (2 * Math.PI);
+                this.planet.rotation.y = (this.planet.rotation.y + uniParams.kTime / this.data[2]) % (2 * Math.PI);
             }
         },
         // 公転関数
         revolution : function() {
             if (params[3]) {
-                quaternion.setFromAxisAngle(new THREE.Vector3(0, 1, 0), 2 * Math.PI / params[3] * kTime);
+                quaternion.setFromAxisAngle(new THREE.Vector3(0, 1, 0), 2 * Math.PI / params[3] * uniParams.kTime);
             }
             this.axis.position.applyQuaternion(this.quaternion);
         },
