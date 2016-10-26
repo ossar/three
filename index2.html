@@ -11,6 +11,7 @@
 <body>
 <script src="js/three.js"></script>
 <script src="js/libs/dat.gui.min.js"></script>
+<script src="js/libs/stats.min.js"></script>
 <script>
 
 /**
@@ -20,6 +21,13 @@ var uniParams = {
     // 時間係数（日）
     kTime : 0.5,
 }
+
+/**
+ * ステータス
+ */
+var stats = new Stats();
+stats.showPanel(0);
+document.body.appendChild( stats.dom );
 
 // 距離係数（km）
 var kDist = 1 / 1e+6;
@@ -168,6 +176,9 @@ function generatePlanet(params) {
 
 // レンダーループ
 function render() {
+
+    stats.begin();
+
     requestAnimationFrame(render);
 
     // 自転・公転
@@ -175,6 +186,8 @@ function render() {
         rotates[i].rotation();
         rotates[i].revolution();
     }
+
+    stats.end();
 
     renderer.render(scene, camera);
 }
