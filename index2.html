@@ -21,6 +21,9 @@
 var uniParams = {
     // 時間係数（日）
     kTime : 0.5,
+    positionX : 0,
+    positionY : 3000,
+    positionZ : 20000,
 }
 
 /**
@@ -41,6 +44,9 @@ var kPlanet = 20;
 // GUI dat
 var gui = new dat.GUI();
 gui.add(uniParams, 'kTime', 0, 1);
+gui.add(uniParams, 'positionX', -2000, 2000);
+gui.add(uniParams, 'positionY', 2500, 3500);
+//gui.add(uniParams, 'positionZ', -20000, 20000);
 
 // データ
 var pData = {
@@ -73,8 +79,9 @@ var camera = new THREE.OrthographicCamera(
     window.innerHeight/2, -window.innerHeight/2,
     1, 100000
 );
-camera.position.z = 20000;
-camera.position.y = 3000;
+camera.position.x = uniParams.positionX;
+camera.position.y = uniParams.positionY;
+camera.position.z = uniParams.positionZ;
 camera.lookAt(scene.position);
 
 //camera.zoom = 1;
@@ -174,8 +181,8 @@ function generatePlanet(params) {
         },
     };
 }
-var controles = new THREE.FlyControls(camera);
-var clock = new THREE.Clock();
+//var controles = new THREE.FlyControls(camera);
+//var clock = new THREE.Clock();
 
 // レンダーループ
 function render() {
@@ -190,13 +197,19 @@ function render() {
         rotates[i].revolution();
     }
 
+    camera.position.x = uniParams.positionX;
+    camera.position.y = uniParams.positionY;
+    camera.position.z = uniParams.positionZ;
+    //camera.lookAt(scene.position);
 
     stats.end();
 
-    controles.update(clock.getDelta());
+    //controles.update(clock.getDelta());
 
     renderer.render(scene, camera);
 }
+
+
 render();
 </script>
 
