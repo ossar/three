@@ -24,6 +24,7 @@ var uniParams = {
     positionX : 0,
     positionY : 3000,
     positionZ : 20000,
+    zoom : 1,
 }
 
 /**
@@ -46,6 +47,7 @@ var gui = new dat.GUI();
 gui.add(uniParams, 'kTime', 0, 1);
 gui.add(uniParams, 'positionX', -2000, 2000);
 gui.add(uniParams, 'positionY', 2500, 3500);
+gui.add(uniParams, 'zoom', 0.4, 2);
 //gui.add(uniParams, 'positionZ', -20000, 20000);
 
 // データ
@@ -74,9 +76,13 @@ var scene = new THREE.Scene();
 //console.log(window.innerWidth/2);
 //console.log(window.innerHeight/2);
 // カメラ
+
+
 var camera = new THREE.OrthographicCamera(
-    -window.innerWidth/2, window.innerWidth/2,
-    window.innerHeight/2, -window.innerHeight/2,
+    - window.innerWidth/2,
+      window.innerWidth/2,
+      window.innerHeight/2,
+    - window.innerHeight/2,
     1, 100000
 );
 camera.position.x = uniParams.positionX;
@@ -84,9 +90,9 @@ camera.position.y = uniParams.positionY;
 camera.position.z = uniParams.positionZ;
 camera.lookAt(scene.position);
 
-//camera.zoom = 1;
+camera.zoom = uniParams.zoom;
 //camera.lookAt(new THREE.Vector3(1495,0,0));
-//camera.updateProjectionMatrix();
+camera.updateProjectionMatrix();
 
 // レンダラ
 var renderer = new THREE.WebGLRenderer();
@@ -184,6 +190,8 @@ function generatePlanet(params) {
 //var controles = new THREE.FlyControls(camera);
 //var clock = new THREE.Clock();
 
+console.log(camera);
+
 // レンダーループ
 function render() {
 
@@ -201,6 +209,9 @@ function render() {
     camera.position.y = uniParams.positionY;
     camera.position.z = uniParams.positionZ;
     //camera.lookAt(scene.position);
+
+    camera.zoom = uniParams.zoom;
+    camera.updateProjectionMatrix();
 
     stats.end();
 
