@@ -25,7 +25,7 @@ var uniParams = {
     positionY : 500,
     positionZ : 1000,
     zoom : 0.5,
-    angleX : -90,
+    angleX : -30,
     angleY : 0,
     angleZ : 0,
 }
@@ -52,8 +52,8 @@ gui.add(uniParams, 'positionX', -2000, 2000);
 gui.add(uniParams, 'positionY', -3500, 3500);
 gui.add(uniParams, 'positionZ', -20000, 20000);
 gui.add(uniParams, 'zoom', 0.1, 10);
-gui.add(uniParams, 'angleX', -180, 180);
-gui.add(uniParams, 'angleY', -180, 180);
+gui.add(uniParams, 'angleX', -100, 100);
+gui.add(uniParams, 'angleY', -100, 100);
 
 // データ
 var pData = {
@@ -208,8 +208,8 @@ function render() {
     camera.position.y = uniParams.positionY;
     camera.position.z = uniParams.positionZ;
     camera.zoom = uniParams.zoom;
-    camera.rotation.x = uniParams.angleX / 1800 * Math.PI;
-    camera.rotation.y = uniParams.angleY / 1800 * Math.PI;
+    camera.rotation.x = uniParams.angleX / 180 * Math.PI;
+    camera.rotation.y = uniParams.angleY / 180 * Math.PI;
     camera.updateProjectionMatrix();
 
     stats.end();
