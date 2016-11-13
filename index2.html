@@ -22,9 +22,12 @@ var uniParams = {
     // 時間係数（日）
     kTime : 0.5,
     positionX : 0,
-    positionY : 3000,
-    positionZ : 20000,
-    zoom : 1,
+    positionY : 500,
+    positionZ : 1000,
+    zoom : 0.5,
+    angleX : -90,
+    angleY : 0,
+    angleZ : 0,
 }
 
 /**
@@ -46,16 +49,18 @@ var kPlanet = 20;
 var gui = new dat.GUI();
 gui.add(uniParams, 'kTime', 0, 1);
 gui.add(uniParams, 'positionX', -2000, 2000);
-gui.add(uniParams, 'positionY', 2500, 3500);
-gui.add(uniParams, 'zoom', 0.4, 2);
-//gui.add(uniParams, 'positionZ', -20000, 20000);
+gui.add(uniParams, 'positionY', -3500, 3500);
+gui.add(uniParams, 'positionZ', -20000, 20000);
+gui.add(uniParams, 'zoom', 0.1, 10);
+gui.add(uniParams, 'angleX', -180, 180);
+gui.add(uniParams, 'angleY', -180, 180);
 
 // データ
 var pData = {
     //          [直径        公転半径   自転    公転     色       ]
     'Sun'     : [1.392e+7  , 0        , 27.25 , 0      , 0xff8844 ],
-    'Mercury' : [4.8794e+4 , 5.791e+8 , 58.62 , 87.9   , 0xdddddd ],
-    'Venus'   : [1.2103e+5 , 1.082e+9 , 243   , 224.7  , 0xefefdd ],
+    'Mercury' : [4.8794e+4 , 5.791e+8 , 58.62 , 87.9   , 0xddccff ],
+    'Venus'   : [1.2103e+5 , 1.082e+9 , 243   , 224.7  , 0xefcd88 ],
     'Earth'   : [1.2756e+5 , 1.496e+9 , 1     , 365.24 , 0x5588ff ],
     'Moon'    : [3.4758e+4 , 3.844e+6 , 27.3  , 27.3   , 0xffff00 ],
     'Mars'    : [6.7974e+4 , 2.279e+9 , 1.026 , 686.98 , 0xff6688 ],
@@ -73,25 +78,20 @@ pData['Jupiter'][0] *= kPlanet;
 // シーン
 var scene = new THREE.Scene();
 
-//console.log(window.innerWidth/2);
-//console.log(window.innerHeight/2);
 // カメラ
-
-
 var camera = new THREE.OrthographicCamera(
-    - window.innerWidth/2,
-      window.innerWidth/2,
-      window.innerHeight/2,
-    - window.innerHeight/2,
+    -window.innerWidth/2,
+    window.innerWidth/2,
+    window.innerHeight/2,
+    -window.innerHeight/2,
     1, 100000
 );
 camera.position.x = uniParams.positionX;
 camera.position.y = uniParams.positionY;
 camera.position.z = uniParams.positionZ;
-camera.lookAt(scene.position);
+//camera.lookAt(scene.position);
 
 camera.zoom = uniParams.zoom;
-//camera.lookAt(new THREE.Vector3(1495,0,0));
 camera.updateProjectionMatrix();
 
 // レンダラ
@@ -113,8 +113,8 @@ rotates.push(sun);
 
 // 水星
 var mercury = generatePlanet(pData['Mercury']);
-//sun.axis.add(mercury.axis);
-//rotates.push(mercury);
+sun.axis.add(mercury.axis);
+rotates.push(mercury);
 
 // 金星
 var venus = generatePlanet(pData['Venus']);
@@ -125,8 +125,6 @@ rotates.push(venus);
 var earth = generatePlanet(pData['Earth']);
 sun.axis.add(earth.axis);
 rotates.push(earth);
-
-//console.log(earth.axis);
 earth.axis.rotation.z += Math.PI * 23.4 / 180;
 
 // 月
@@ -190,7 +188,8 @@ function generatePlanet(params) {
 //var controles = new THREE.FlyControls(camera);
 //var clock = new THREE.Clock();
 
-console.log(camera);
+console.log(camera.rotation.x);
+console.log(camera.rotation.x);
 
 // レンダーループ
 function render() {
@@ -208,9 +207,9 @@ function render() {
     camera.position.x = uniParams.positionX;
     camera.position.y = uniParams.positionY;
     camera.position.z = uniParams.positionZ;
-    //camera.lookAt(scene.position);
-
     camera.zoom = uniParams.zoom;
+    camera.rotation.x = uniParams.angleX / 1800 * Math.PI;
+    camera.rotation.y = uniParams.angleY / 1800 * Math.PI;
     camera.updateProjectionMatrix();
 
     stats.end();
