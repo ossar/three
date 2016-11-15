@@ -24,7 +24,7 @@ var uniParams = {
     positionX : 0,
     positionY : 500,
     positionZ : 1000,
-    zoom : 0.5,
+    zoom : 1,
     angleX : -30,
     angleY : 0,
     angleZ : 0,
@@ -38,7 +38,7 @@ stats.showPanel(0);
 document.body.appendChild( stats.dom );
 
 // 距離係数（km）
-var kDist = 1 / 1e+6;
+var kDist = 5 / 1e+7;
 
 // サイズ
 //var kSize = 2 / 1e+6;
@@ -84,7 +84,7 @@ var camera = new THREE.OrthographicCamera(
     window.innerWidth/2,
     window.innerHeight/2,
     -window.innerHeight/2,
-    1, 100000
+    1, 1000000
 );
 camera.position.x = uniParams.positionX;
 camera.position.y = uniParams.positionY;
